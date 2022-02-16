@@ -1,6 +1,8 @@
+export {}
 const assert = require("assert");
 const anchor = require("@project-serum/anchor");
 const { SystemProgram } = anchor.web3;
+var baseAccount = anchor.web3.Keypair.generate();
 
 describe("Testing our messaging app: ", () => {
   const provider = anchor.Provider.env();
@@ -8,7 +10,6 @@ describe("Testing our messaging app: ", () => {
   const program = anchor.workspace.Messengerapp;
 
   it("An account is initialized: ", async function() {
-    const baseAccount = anchor.web3.Keypair.generate();
     await program.rpc.initialize("My first message", {
       accounts: {
         baseAccount: baseAccount.publicKey,
@@ -21,11 +22,10 @@ describe("Testing our messaging app: ", () => {
     const account = await program.account.baseAccount.fetch(baseAccount.publicKey);
     console.log("Data: ", account.data);
     assert.ok(account.data === "My first message");
-    _baseAccount = baseAccount;
+    baseAccount = baseAccount;
   });
 
   it("Update the account previously created: ", async function() {
-    const baseAccount = _baseAccount;
 
     await program.rpc.update("My second message", {
       accounts: {
